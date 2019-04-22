@@ -1,0 +1,400 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Recognizing digits"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn import datasets"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "digits = datasets.load_digits()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "{'data': array([[ 0.,  0.,  5., ...,  0.,  0.,  0.],\n",
+       "        [ 0.,  0.,  0., ..., 10.,  0.,  0.],\n",
+       "        [ 0.,  0.,  0., ..., 16.,  9.,  0.],\n",
+       "        ...,\n",
+       "        [ 0.,  0.,  1., ...,  6.,  0.,  0.],\n",
+       "        [ 0.,  0.,  2., ..., 12.,  0.,  0.],\n",
+       "        [ 0.,  0., 10., ..., 12.,  1.,  0.]]),\n",
+       " 'target': array([0, 1, 2, ..., 8, 9, 8]),\n",
+       " 'target_names': array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),\n",
+       " 'images': array([[[ 0.,  0.,  5., ...,  1.,  0.,  0.],\n",
+       "         [ 0.,  0., 13., ..., 15.,  5.,  0.],\n",
+       "         [ 0.,  3., 15., ..., 11.,  8.,  0.],\n",
+       "         ...,\n",
+       "         [ 0.,  4., 11., ..., 12.,  7.,  0.],\n",
+       "         [ 0.,  2., 14., ..., 12.,  0.,  0.],\n",
+       "         [ 0.,  0.,  6., ...,  0.,  0.,  0.]],\n",
+       " \n",
+       "        [[ 0.,  0.,  0., ...,  5.,  0.,  0.],\n",
+       "         [ 0.,  0.,  0., ...,  9.,  0.,  0.],\n",
+       "         [ 0.,  0.,  3., ...,  6.,  0.,  0.],\n",
+       "         ...,\n",
+       "         [ 0.,  0.,  1., ...,  6.,  0.,  0.],\n",
+       "         [ 0.,  0.,  1., ...,  6.,  0.,  0.],\n",
+       "         [ 0.,  0.,  0., ..., 10.,  0.,  0.]],\n",
+       " \n",
+       "        [[ 0.,  0.,  0., ..., 12.,  0.,  0.],\n",
+       "         [ 0.,  0.,  3., ..., 14.,  0.,  0.],\n",
+       "         [ 0.,  0.,  8., ..., 16.,  0.,  0.],\n",
+       "         ...,\n",
+       "         [ 0.,  9., 16., ...,  0.,  0.,  0.],\n",
+       "         [ 0.,  3., 13., ..., 11.,  5.,  0.],\n",
+       "         [ 0.,  0.,  0., ..., 16.,  9.,  0.]],\n",
+       " \n",
+       "        ...,\n",
+       " \n",
+       "        [[ 0.,  0.,  1., ...,  1.,  0.,  0.],\n",
+       "         [ 0.,  0., 13., ...,  2.,  1.,  0.],\n",
+       "         [ 0.,  0., 16., ..., 16.,  5.,  0.],\n",
+       "         ...,\n",
+       "         [ 0.,  0., 16., ..., 15.,  0.,  0.],\n",
+       "         [ 0.,  0., 15., ..., 16.,  0.,  0.],\n",
+       "         [ 0.,  0.,  2., ...,  6.,  0.,  0.]],\n",
+       " \n",
+       "        [[ 0.,  0.,  2., ...,  0.,  0.,  0.],\n",
+       "         [ 0.,  0., 14., ..., 15.,  1.,  0.],\n",
+       "         [ 0.,  4., 16., ..., 16.,  7.,  0.],\n",
+       "         ...,\n",
+       "         [ 0.,  0.,  0., ..., 16.,  2.,  0.],\n",
+       "         [ 0.,  0.,  4., ..., 16.,  2.,  0.],\n",
+       "         [ 0.,  0.,  5., ..., 12.,  0.,  0.]],\n",
+       " \n",
+       "        [[ 0.,  0., 10., ...,  1.,  0.,  0.],\n",
+       "         [ 0.,  2., 16., ...,  1.,  0.,  0.],\n",
+       "         [ 0.,  0., 15., ..., 15.,  0.,  0.],\n",
+       "         ...,\n",
+       "         [ 0.,  4., 16., ..., 16.,  6.,  0.],\n",
+       "         [ 0.,  8., 16., ..., 16.,  8.,  0.],\n",
+       "         [ 0.,  1.,  8., ..., 12.,  1.,  0.]]]),\n",
+       " 'DESCR': \".. _digits_dataset:\\n\\nOptical recognition of handwritten digits dataset\\n--------------------------------------------------\\n\\n**Data Set Characteristics:**\\n\\n    :Number of Instances: 5620\\n    :Number of Attributes: 64\\n    :Attribute Information: 8x8 image of integer pixels in the range 0..16.\\n    :Missing Attribute Values: None\\n    :Creator: E. Alpaydin (alpaydin '@' boun.edu.tr)\\n    :Date: July; 1998\\n\\nThis is a copy of the test set of the UCI ML hand-written digits datasets\\nhttp://archive.ics.uci.edu/ml/datasets/Optical+Recognition+of+Handwritten+Digits\\n\\nThe data set contains images of hand-written digits: 10 classes where\\neach class refers to a digit.\\n\\nPreprocessing programs made available by NIST were used to extract\\nnormalized bitmaps of handwritten digits from a preprinted form. From a\\ntotal of 43 people, 30 contributed to the training set and different 13\\nto the test set. 32x32 bitmaps are divided into nonoverlapping blocks of\\n4x4 and the number of on pixels are counted in each block. This generates\\nan input matrix of 8x8 where each element is an integer in the range\\n0..16. This reduces dimensionality and gives invariance to small\\ndistortions.\\n\\nFor info on NIST preprocessing routines, see M. D. Garris, J. L. Blue, G.\\nT. Candela, D. L. Dimmick, J. Geist, P. J. Grother, S. A. Janet, and C.\\nL. Wilson, NIST Form-Based Handprint Recognition System, NISTIR 5469,\\n1994.\\n\\n.. topic:: References\\n\\n  - C. Kaynak (1995) Methods of Combining Multiple Classifiers and Their\\n    Applications to Handwritten Digit Recognition, MSc Thesis, Institute of\\n    Graduate Studies in Science and Engineering, Bogazici University.\\n  - E. Alpaydin, C. Kaynak (1998) Cascading Classifiers, Kybernetika.\\n  - Ken Tang and Ponnuthurai N. Suganthan and Xi Yao and A. Kai Qin.\\n    Linear dimensionalityreduction using relevance weighted LDA. School of\\n    Electrical and Electronic Engineering Nanyang Technological University.\\n    2005.\\n  - Claudio Gentile. A New Approximate Maximal Margin Classification\\n    Algorithm. NIPS. 2000.\"}"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "digits #the whole data set as JSON dict"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[ 0.,  0.,  5., ...,  0.,  0.,  0.],\n",
+       "       [ 0.,  0.,  0., ..., 10.,  0.,  0.],\n",
+       "       [ 0.,  0.,  0., ..., 16.,  9.,  0.],\n",
+       "       ...,\n",
+       "       [ 0.,  0.,  1., ...,  6.,  0.,  0.],\n",
+       "       [ 0.,  0.,  2., ..., 12.,  0.,  0.],\n",
+       "       [ 0.,  0., 10., ..., 12.,  1.,  0.]])"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "digits.data #all data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([ 0.,  0.,  5., 13.,  9.,  1.,  0.,  0.,  0.,  0., 13., 15., 10.,\n",
+       "       15.,  5.,  0.,  0.,  3., 15.,  2.,  0., 11.,  8.,  0.,  0.,  4.,\n",
+       "       12.,  0.,  0.,  8.,  8.,  0.,  0.,  5.,  8.,  0.,  0.,  9.,  8.,\n",
+       "        0.,  0.,  4., 11.,  0.,  1., 12.,  7.,  0.,  0.,  2., 14.,  5.,\n",
+       "       10., 12.,  0.,  0.,  0.,  0.,  6., 13., 10.,  0.,  0.,  0.])"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "digits.data[0] #individual data point (actual 0 represented as image)\n",
+    "# where each pixel corresponds between 0 and 1 , white-black\n",
+    "#should be a matrix, but for some reasons is a 1-dimensional vector\n",
+    "#so we know that this is false, so we have to reshape it then...\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "digits.target[0] #actual target \n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(64,)"
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "digits.data[0].shape #shape of 64 \n",
+    "# = 64 one dimensional vector\n",
+    "# which means that this is a 8*8 matrix (2-dimensional)\n",
+    "# and we have to reshape it (not now, but in general)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([0, 1, 2, ..., 8, 9, 8])"
+      ]
+     },
+     "execution_count": 25,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "digits.target"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(1797,)"
+      ]
+     },
+     "execution_count": 23,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "digits.target.shape #we have a lot of digits ..."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(1797, 64)"
+      ]
+     },
+     "execution_count": 28,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "digits.data.shape # and a lot of handwritten digits (pictures)\n",
+    "#each one is represented as a vector 64 (that we have to reshape to matrix 8*8)\n",
+    "# 64 pixel values"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Learn to predict the class (1-9)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#multiclass classification\n",
+    "from sklearn import svm #support vector machine "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "clf = svm.SVC(gamma=0.001, C=100.) #classifier "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "SVC(C=100.0, cache_size=200, class_weight=None, coef0=0.0,\n",
+       "  decision_function_shape='ovr', degree=3, gamma=0.001, kernel='rbf',\n",
+       "  max_iter=-1, probability=False, random_state=None, shrinking=True,\n",
+       "  tol=0.001, verbose=False)"
+      ]
+     },
+     "execution_count": 33,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "clf.fit(digits.data[:-1], digits.target[:-1] ) #learn from all data except last digit"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 49,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([8])"
+      ]
+     },
+     "execution_count": 49,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "clf.predict(digits.data[-1:]) #predicting the last digit\n",
+    "# without double colon impossible because it is a 2d array, not just list"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 50,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<matplotlib.image.AxesImage at 0x1167b2898>"
+      ]
+     },
+     "execution_count": 50,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 144x144 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "%matplotlib inline \n",
+    "import numpy as np \n",
+    "from matplotlib import pyplot as plt\n",
+    "\n",
+    "plt.figure(figsize=(2,2))\n",
+    "plt.imshow(digits.images[-1], cmap=plt.cm.binary) #cmap for black and white"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
