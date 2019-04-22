@@ -3,7 +3,7 @@
 ##### Contains:
 * Raw data
 * Preprocessed data
-* Jupyter notebooks with comments
+* Jupyter notebooks with comments and notes
 * Model weights  
 
 ##### Models covered: 
